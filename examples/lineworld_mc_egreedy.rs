@@ -11,10 +11,10 @@ pub type E = LineWorld;
 fn main() {
     let env = LineWorld::new(10, 1, 9, vec![0]);
     let mut agent = QEveryVisitMC::<S, A, P, E>::new(0.9);
-    let mut policy = EGreedyPolicy::<A>::new(0.1);
+    let mut policy = EGreedyPolicy::<A>::new(0.1, 1.0);
 
     let mut history = Vec::new();
-    for _ in 0..500 {
+    for _ in 0..200 {
         let mut episode = vec![];
         let mut state = env.get_init_state();
 
@@ -48,5 +48,5 @@ fn main() {
     let mut df = DataFrame::new(vec![]);
     df.push("len", Series::new(history_len_vec));
     df.print();
-    df.write_parquet("data/line_world_mc.parquet", CompressionOptions::Uncompressed).unwrap();
+    df.write_parquet("data/lineworld_mc_egreedy.parquet", CompressionOptions::Uncompressed).unwrap();
 }

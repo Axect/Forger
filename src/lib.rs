@@ -186,21 +186,25 @@ impl<S: Hash + Eq + Copy, A: Hash + Eq + Copy, P: Policy<A>, E: Environment<S, A
 }
 
 // ┌──────────────────────────────────────────────────────────┐
-//  Epsilon Greedy Policy
+//  Epsilon Greedy (with Decay) Policy                                                            
 // └──────────────────────────────────────────────────────────┘
 pub struct EGreedyPolicy<A> {
     epsilon: f64,
-    random: bool,
+    decay: f64,
     _action_type: std::marker::PhantomData<A>,
 }
 
 impl<A: Clone> EGreedyPolicy<A> {
-    pub fn new(epsilon: f64) -> Self {
+    pub fn new(epsilon: f64, decay: f64) -> Self {
         Self {
             epsilon,
-            random: true,
+            decay,
             _action_type: std::marker::PhantomData,
         }
+    }
+
+    pub fn decay_epsilon(&mut self) {
+        self.epsilon *= self.decay;
     }
 }
 
@@ -210,10 +214,12 @@ impl<A: Clone> Policy<A> for EGreedyPolicy<A> {
             return None;
         }
 
+        let epsilon = self.epsilon;
+
         let u = Uniform(0f64, 1f64);
         let sample = u.sample(1)[0];
 
-        if sample < self.epsilon && self.random {
+        if sample < epsilon {
             let mut rng = thread_rng();
             Some(action_rewards.choose(&mut rng).unwrap().0.clone())
         } else {

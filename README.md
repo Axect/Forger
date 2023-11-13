@@ -1,5 +1,7 @@
 # Forger - Reinforcement Learning Library in Rust
 
+<img src="https://github.com/Axect/Forger/blob/master/forger_logo.png" width=40%>
+
 ## Introduction
 
 Forger is a Reinforcement Learning (RL) library in Rust, offering a robust and efficient framework for implementing RL algorithms. It features a modular design with components for agents, environments, policies, and utilities, facilitating easy experimentation and development of RL models.

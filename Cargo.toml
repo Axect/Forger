@@ -1,6 +1,6 @@
 [package]
 name = "forger"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Axect <ax2ct@outlook.com>"]
 description = "Forger is a library for reinforcement learning with Rust"

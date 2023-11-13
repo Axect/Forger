@@ -1,4 +1,5 @@
 pub mod lineworld;
+pub mod gridworld;
 
 pub trait Env<S, A> {
     fn transition(&self, state: &S, action: &Option<A>) -> (Option<S>, f64);

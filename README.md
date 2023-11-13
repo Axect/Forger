@@ -84,13 +84,17 @@ fn main() {
 }
 ```
 
-
 ## Examples
 
 1. [**Monte Carlo with Epsilon Decay in `LineWorld`**](./examples/lineworld_mc_edecay.rs):
    - Demonstrates the use of the Q-Learning Every Visit Monte Carlo (`QEveryVisitMC`) agent with an Epsilon Greedy Policy (with decay) in the `LineWorld` environment.
    - Illustrates the process of running multiple episodes, selecting actions, updating the agent, and decaying the epsilon value over time.
-   - Includes data gathering and exporting functionality, showcasing practical aspects of RL experiments.
+   - Updates the agent after each episode.
+
+2. [**TD0 with Epsilon Decay in `GridWorld`**](./examples/gridworld_td0_edecay.rs):
+  - Demonstrates the use of the TD0 (`TD0`) agent with an Epsilon Greedy Policy (with decay) in the `GridWorld` environment.
+  - Illustrates the process of running multiple episodes, selecting actions, updating the agent, and decaying the epsilon value over time.
+  - Updates the agent every steps in each episode.
 
 
 ## Contributing

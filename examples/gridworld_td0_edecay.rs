@@ -1,16 +1,16 @@
 use peroxide::fuga::*;
 use forger::prelude::*;
-use forger::env::lineworld::{LineWorld, LineWorldAction};
+use forger::env::gridworld::{GridWorld, GridWorldAction};
 
-pub type S = usize;
-pub type A = LineWorldAction;
+pub type S = (usize, usize);
+pub type A = GridWorldAction;
 pub type P = EGreedyPolicy<A>;
-pub type E = LineWorld;
+pub type E = GridWorld;
 
 fn main() {
-    let env = LineWorld::new(10, 1, 9, vec![0]);
+    let env = GridWorld::new(4, 4, (0, 0), (3, 3), vec![(1, 3), (3, 1)]);
     let mut agent = QTD0::<S, A, P, E>::new(0.95);
-    let mut policy = EGreedyPolicy::<A>::new(0.1, 1.0);
+    let mut policy = EGreedyPolicy::<A>::new(0.9, 0.9);
 
     let mut history = Vec::new();
     for _ in 0..100 {
@@ -38,8 +38,9 @@ fn main() {
             }
         }
 
-        agent.q_table.iter_mut().for_each(|(_, v)| *v = (*v / 2f64).tanh());
+        agent.q_table.iter_mut().for_each(|(_, v)| *v = (*v / (2f64 - agent.gamma)).tanh());
         history.push(episode);
+        policy.decay_epsilon();
     }
 
     let history_len_vec = history
@@ -58,5 +59,5 @@ fn main() {
     let mut df = DataFrame::new(vec![]);
     df.push("len", Series::new(history_len_vec));
     df.print();
-    df.write_parquet("data/lineworld_td0_egreedy.parquet", CompressionOptions::Uncompressed).unwrap();
+    df.write_parquet("data/gridworld_td0_edecay.parquet", CompressionOptions::Uncompressed).unwrap();
 }

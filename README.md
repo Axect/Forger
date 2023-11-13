@@ -48,10 +48,10 @@ cargo add forger
 use forger::prelude::*;
 use forger::env::lineworld::{LineWorld, LineWorldAction};
 
-pub type S = usize;           // State
-pub type A = LineWorldAction; // Action
-pub type P = EGreedyPolicy;   // Policy
-pub type E = LineWorld;       // Environment
+pub type S = usize;             // State
+pub type A = LineWorldAction;   // Action
+pub type P = EGreedyPolicy<A>;  // Policy
+pub type E = LineWorld;         // Environment
 
 fn main() {
     let env = LineWorld::new(

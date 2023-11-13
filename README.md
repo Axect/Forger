@@ -54,33 +54,33 @@ pub type P = EGreedyPolicy;   // Policy
 pub type E = LineWorld;       // Environment
 
 fn main() {
-  let env = LineWorld::new(
-      5,      // number of states
-      1,      // initial state
-      4,      // goal state
-      vec![0] // terminal states
-  );
+    let env = LineWorld::new(
+        5,      // number of states
+        1,      // initial state
+        4,      // goal state
+        vec![0] // terminal states
+    );
 
-  let mut agent = QEveryVisitMC::<S, A, P, E>::new(0.9); // Q-learning (Everyvisit MC, gamma = 0.9)
-  let mut policy = EGreedyPolicy::new(0.5, 0.95);        // Epsilon Greedy Policy (epsilon = 0.5, decay = 0.95)
+    let mut agent = QEveryVisitMC::<S, A, P, E>::new(0.9); // Q-learning (Everyvisit MC, gamma = 0.9)
+    let mut policy = EGreedyPolicy::new(0.5, 0.95);        // Epsilon Greedy Policy (epsilon = 0.5, decay = 0.95)
 
-  for _ in 0 .. 200 {
-      let mut episode = vec![];
-      let mut state = env.get_init_state();
+    for _ in 0 .. 200 {
+        let mut episode = vec![];
+        let mut state = env.get_init_state();
 
-      loop {
-          let action = agent.select_action(&state, &mut policy, &env);
-          let (next_state, reward) = env.transition(&state, &action);
-          episode.push((state, action.unwrap(), reward));
-          match next_state {
-              Some(s) => state = s,
-              None => break,
-          }
-      }
+        loop {
+            let action = agent.select_action(&state, &mut policy, &env);
+            let (next_state, reward) = env.transition(&state, &action);
+            episode.push((state, action.unwrap(), reward));
+            match next_state {
+                Some(s) => state = s,
+                None => break,
+            }
+        }
 
-      agent.update(&episode);
-      policy.decay_epsilon();
-  }
+        agent.update(&episode);
+        policy.decay_epsilon();
+    }
 }
 ```
 

@@ -1,7 +1,6 @@
 use peroxide::fuga::*;
-use rlai2::{
-    Agent, EGreedyPolicy, Environment, LineWorld, LineWorldAction, QEveryVisitMC,
-};
+use forger::prelude::*;
+use forger::env::lineworld::{LineWorld, LineWorldAction};
 
 pub type S = usize;
 pub type A = LineWorldAction;

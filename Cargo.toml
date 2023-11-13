@@ -1,7 +1,15 @@
 [package]
-name = "rlai2"
+name = "forger"
 version = "0.1.0"
 edition = "2021"
+authors = ["Axect <ax2ct@outlook.com>"]
+description = "Forger is a library for reinforcement learning with Rust"
+license = "MIT OR Apache-2.0"
+categories = ["science"]
+readme = "README.md"
+repository = "https://github.com/Axect/Radient"
+keywords = ["reinforcement-learning", "machine-learning", "ai"]
+exclude = ["src/bin/", "src/main.rs", "examples/", "data/", "figures/"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

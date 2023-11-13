@@ -9,7 +9,7 @@ categories = ["science"]
 readme = "README.md"
 repository = "https://github.com/Axect/Forger"
 keywords = ["reinforcement-learning", "machine-learning", "ai"]
-exclude = ["src/bin/", "src/main.rs", "examples/", "data/", "figures/", "script/"]
+exclude = ["src/bin/", "src/main.rs", "examples/", "data/", "figure/", "script/"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

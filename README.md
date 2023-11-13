@@ -1,6 +1,8 @@
 # Forger - Reinforcement Learning Library in Rust
 
-<img align="center" src="https://github.com/Axect/Forger/blob/master/forger_logo.png" width=40%>
+<p align="center">
+   <img src="https://github.com/Axect/Forger/blob/master/forger_logo.png" width=40%>
+</p>
 
 ## Introduction
 

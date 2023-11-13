@@ -1,4 +1,5 @@
 use std::{collections::HashMap, hash::Hash};
+use peroxide::fuga::*;
 
 use crate::policy::Policy;
 use crate::env::Env;
@@ -89,7 +90,7 @@ impl<S: Hash + Eq + Copy, A: Clone, P: Policy<A>, E: Env<S, A>> Agent<S, A, P, E
         // Forward update for value function
         info.iter().zip(R).enumerate().for_each(|(t, ((s, _), r))| {
             let v = self.get_value(s);
-            let alpha = 5.0 / (t + 5) as f64;
+            let alpha = 1.0 / (t + 1) as f64;
             self.update_value(s, v + alpha * (r - v));
         });
     }
@@ -170,8 +171,106 @@ impl<S: Hash + Eq + Copy, A: Hash + Eq + Copy, P: Policy<A>, E: Env<S, A>> Agent
             .enumerate()
             .for_each(|(t, ((s, a, _), r))| {
                 let v = self.get_action_value(s, a);
-                let alpha = 5.0 / (t + 5) as f64;
+                let alpha = 1.0 / (t + 1) as f64;
                 self.update_value(s, a, v + alpha * (r - v));
             })
+    }
+}
+
+// ┌──────────────────────────────────────────────────────────┐
+//  Q-Learning - TD0
+// └──────────────────────────────────────────────────────────┘
+pub struct QTD0<S, A, P: Policy<A>, E: Env<S, A>> {
+    pub q_table: HashMap<(S, A), f64>,
+    pub gamma: f64,
+    t: usize,
+    _action_type: std::marker::PhantomData<A>,
+    _policy_type: std::marker::PhantomData<P>,
+    _env_type: std::marker::PhantomData<E>,
+}
+
+impl<S: Hash + Eq + Copy, A: Hash + Eq + Copy, P: Policy<A>, E: Env<S, A>> QTD0<S, A, P, E> {
+    pub fn new(gamma: f64) -> Self {
+        Self {
+            q_table: HashMap::new(),
+            gamma,
+            t: 0,
+            _action_type: std::marker::PhantomData,
+            _policy_type: std::marker::PhantomData,
+            _env_type: std::marker::PhantomData,
+        }
+    }
+
+    pub fn update_value(&mut self, state: &S, action: &A, value: f64) {
+        self.q_table.insert((*state, *action), value);
+    }
+
+    pub fn add_value(&mut self, state: &S, action: &A, value: f64) {
+        let old = *self.q_table.get(&(*state, *action)).unwrap_or(&0.0);
+        self.q_table.insert((*state, *action), old + value);
+    }
+
+    pub fn increment_count(&mut self) {
+        self.t += 1;
+    }
+
+    pub fn reset_count(&mut self) {
+        self.t = 0;
+    }
+
+    pub fn get_alpha(&self) -> f64 {
+        1.0 / (self.t + 1) as f64
+    }
+}
+
+impl<S: Hash + Eq + Copy, A: Hash + Eq + Copy, P: Policy<A>, E: Env<S, A>> Agent<S, A, P, E>
+    for QTD0<S, A, P, E>
+{
+    // Information = Step
+    type Information = (S, A, f64, Option<S>, Vec<A>);
+
+    fn get_action_value(&self, state: &S, action: &A) -> f64 {
+        *self.q_table.get(&(*state, *action)).unwrap_or(&0.0)
+    }
+
+    fn get_value(&self, _state: &S) -> f64 {
+        unimplemented!()
+    }
+
+    fn select_action(&self, state: &S, policy: &mut P, env: &E) -> Option<A> {
+        let actions = env.available_actions(state);
+        let candidates = actions
+            .iter()
+            .map(|a| (*a, self.get_action_value(state, a)))
+            .collect::<Vec<_>>();
+
+        policy.select_action(&candidates)
+    }
+
+    #[allow(non_snake_case)]
+    fn update(&mut self, info: &Self::Information) {
+        let (s, a, r, s_next, a_pool) = info;
+
+        let delta = if let Some(s_next) = s_next {
+            let mut Q_next_max = std::f64::MIN;
+            let mut a_next = vec![];
+            for a_prime in a_pool {
+                let q = self.get_action_value(s_next, a_prime);
+                if q > Q_next_max {
+                    Q_next_max = q;
+                    a_next = vec![*a_prime];
+                } else if q == Q_next_max {
+                    a_next.push(*a_prime);
+                }
+            }
+            let a_next = a_next.choose(&mut thread_rng()).unwrap();
+            r + self.gamma * self.get_action_value(s_next, a_next)
+        } else {
+            r - self.get_action_value(s, a)
+        };
+
+        let alpha = self.get_alpha();
+        self.add_value(s, a, delta * alpha);
+        self.increment_count();
     }
 }

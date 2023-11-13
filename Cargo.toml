@@ -7,7 +7,7 @@ description = "Forger is a library for reinforcement learning with Rust"
 license = "MIT OR Apache-2.0"
 categories = ["science"]
 readme = "README.md"
-repository = "https://github.com/Axect/Radient"
+repository = "https://github.com/Axect/Forger"
 keywords = ["reinforcement-learning", "machine-learning", "ai"]
 exclude = ["src/bin/", "src/main.rs", "examples/", "data/", "figures/"]
 

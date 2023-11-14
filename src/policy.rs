@@ -10,6 +10,7 @@ pub trait Policy<A> {
 pub struct EGreedyPolicy<A> {
     epsilon: f64,
     decay: f64,
+    random: bool,
     _action_type: std::marker::PhantomData<A>,
 }
 
@@ -18,6 +19,7 @@ impl<A: Clone> EGreedyPolicy<A> {
         Self {
             epsilon,
             decay,
+            random: true,
             _action_type: std::marker::PhantomData,
         }
     }
@@ -38,7 +40,7 @@ impl<A: Clone> Policy<A> for EGreedyPolicy<A> {
         let u = Uniform(0f64, 1f64);
         let sample = u.sample(1)[0];
 
-        if sample < epsilon {
+        if sample < epsilon && self.random {
             let mut rng = thread_rng();
             Some(action_rewards.choose(&mut rng).unwrap().0.clone())
         } else {

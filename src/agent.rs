@@ -184,17 +184,21 @@ pub struct QTD0<S, A, P: Policy<A>, E: Env<S, A>> {
     pub q_table: HashMap<(S, A), f64>,
     pub gamma: f64,
     t: usize,
+    c: f64,
+    eta: f64,
     _action_type: std::marker::PhantomData<A>,
     _policy_type: std::marker::PhantomData<P>,
     _env_type: std::marker::PhantomData<E>,
 }
 
 impl<S: Hash + Eq + Copy, A: Hash + Eq + Copy, P: Policy<A>, E: Env<S, A>> QTD0<S, A, P, E> {
-    pub fn new(gamma: f64) -> Self {
+    pub fn new(gamma: f64, c: f64, eta: f64) -> Self {
         Self {
             q_table: HashMap::new(),
             gamma,
             t: 0,
+            c,
+            eta,
             _action_type: std::marker::PhantomData,
             _policy_type: std::marker::PhantomData,
             _env_type: std::marker::PhantomData,
@@ -219,7 +223,7 @@ impl<S: Hash + Eq + Copy, A: Hash + Eq + Copy, P: Policy<A>, E: Env<S, A>> QTD0<
     }
 
     pub fn get_alpha(&self) -> f64 {
-        1.0 / (self.t + 1) as f64
+        self.c * (self.t as f64 + 1f64).powf(-self.eta)
     }
 }
 

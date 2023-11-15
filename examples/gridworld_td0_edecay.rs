@@ -9,7 +9,7 @@ pub type E = GridWorld;
 
 fn main() {
     let env = GridWorld::new(4, 4, (0, 0), (3, 3), vec![(1, 3), (3, 1)]);
-    let mut agent = QTD0::<S, A, P, E>::new(0.95);
+    let mut agent = QTD0::<S, A, P, E>::new(0.95, 1f64, 1f64);
     let mut policy = EGreedyPolicy::<A>::new(0.9, 0.9);
 
     let mut history = Vec::new();

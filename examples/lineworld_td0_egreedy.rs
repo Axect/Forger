@@ -9,7 +9,7 @@ pub type E = LineWorld;
 
 fn main() {
     let env = LineWorld::new(10, 1, 9, vec![0]);
-    let mut agent = QTD0::<S, A, P, E>::new(0.95);
+    let mut agent = QTD0::<S, A, P, E>::new(0.95, 1f64, 1f64);
     let mut policy = EGreedyPolicy::<A>::new(0.1, 1.0);
 
     let mut history = Vec::new();

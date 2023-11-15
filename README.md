@@ -106,6 +106,7 @@ fn main() {
    - Demonstrates the use of the TD0 (`TD0`) agent with an Epsilon Greedy Policy (with decay) in the `GridWorld` environment.
    - Illustrates the process of running multiple episodes, selecting actions, updating the agent, and decaying the epsilon value over time.
    - Updates the agent every steps in each episode.
+   - Include test process of trained agent.
 
 ## Contributing
 

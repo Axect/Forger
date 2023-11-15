@@ -55,6 +55,30 @@ fn main() {
 
     println!("Q Table: {:#?}", q_table);
 
+    // Evaluate
+    policy.eval();
+    agent.reset_count();
+    let mut episode = vec![];
+    let mut state = env.get_init_state();
+
+    loop {
+        let action = agent.select_action(&state, &mut policy, &env);
+        let (next_state, _) = env.transition(&state, &action);
+        match next_state {
+            Some(next_state) => {
+                episode.push((state, action.unwrap()));
+                state = next_state
+            }
+            None => {
+                episode.push((state, action.unwrap()));
+                break;
+            }
+        }
+    }
+
+    println!("Episode: {:?}", episode);
+
+
     // Write parquet
     let mut df = DataFrame::new(vec![]);
     df.push("len", Series::new(history_len_vec));

@@ -27,6 +27,10 @@ impl<A: Clone> EGreedyPolicy<A> {
     pub fn decay_epsilon(&mut self) {
         self.epsilon *= self.decay;
     }
+
+    pub fn eval(&mut self) {
+        self.random = false;
+    }
 }
 
 impl<A: Clone> Policy<A> for EGreedyPolicy<A> {
